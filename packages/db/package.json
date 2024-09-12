@@ -1,0 +1,14 @@
+{
+  "name": "@rinshadp014/db",
+  "version": "0.0.0",
+  "main": "./src",
+  "dependencies": {
+    "@prisma/client": "^5.11.0"
+  },
+  "exports": {
+    "./client": "./index.ts"
+  },
+  "devDependencies": {
+    "prisma": "^5.19.1"
+  }
+}
