@@ -1,47 +1,58 @@
-import db from "@rinshadp014/db/client"
 
-import { hashPassword, verifyPassword } from "./hashPassword"
 import CredentialsProvider from "next-auth/providers/credentials"
+import createUser from "../../dbQuery/createUser"
+import { findUnique } from "../../dbQuery/findUnique"
 import CredentialsType from "../types/authOption"
-import { findUnique } from "../dbQuery/findUnique"
+import { verifyPassword } from "./hashPassword"
 
 
-export const authOption = {
-  provider: [
+export const authOptions = {
+  providers: [
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        username: { label: "Phone Number", type: "text", placeholder: "jsmith", require },
-        password: { label: "Password", type: "password", require }
+        username: { label: "Username", type: "text", placeholder: "jsmith", require },
+        password: { label: "Password", type: "password", }
       },
-      //here i want to find the type of the credentials but couldn't 
-      async authorize(credentials: CredentialsType, req) {
-        if (credentials?.username || credentials?.password) {
-          try {
-            let existingUser = await findUnique(credentials?.username)
+      async authorize(credentials: any) {
+        try {
+          let existingUser = await findUnique(credentials?.username)
 
-            if (existingUser) {
-
-              let isValidPassword = await verifyPassword(existingUser.password, credentials?.password)
-              if (isValidPassword) {
-                return {
-                  id: existingUser.id,
-                  name: existingUser.name,
-                  email: existingUser.email
-                }
+          if (existingUser) {
+            let isValidPassword = await verifyPassword(existingUser.password, credentials?.password)
+            if (isValidPassword) {
+              return {
+                id: existingUser.id,
+                name: existingUser.name,
+                email: existingUser.email
               }
-              return null
             }
-
-
-          } catch (e) {
-            console.error(e)
+            return null
           }
+        } catch (e) {
+          console.error(e)
           return null
         }
-      }
+
+        try {
+          let user = createUser({ password: credentials.password, userName: credentials.username })
+          return user
+        } catch (e) {
+          console.log(e)
+          return null
+        }
+
+        return null
+      },
     })
-  ]
+  ],
+  secret: process.env.JWT_SECRET || 'secret',
+  callbacks: {
+    async session({ token, session }: any) {
+      session.user.id = token.sub
+      return session
+    }
+  }
 }
 
-
+export default authOptions
