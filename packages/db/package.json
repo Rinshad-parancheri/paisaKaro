@@ -1,0 +1,16 @@
+{
+  "name": "@repo/db",
+  "version": "0.0.0",
+  "exports": {
+    "./cleint": "./src/index.ts"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "*",
+    "@types/node": "^20.11.24",
+    "prisma": "^5.19.1",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.19.1"
+  }
+}

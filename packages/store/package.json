@@ -1,0 +1,21 @@
+{
+  "name": "@repo/store",
+  "version": "0.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "recoil": "^0.7.7"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "*"
+  },
+  "exports": {
+    "./useBalance": "./src/hooks/useBalance.ts"
+  }
+}
